@@ -1,0 +1,21 @@
+<!-- video_stream.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Stream</title>
+</head>
+<body>
+    <h1>Video Stream</h1>
+    <video id="localVideo" autoplay controls></video>
+    <script>
+        async function startVideoStream() {
+            const localStream = await navigator.mediaDevices.getUserMedia({ video: true });
+            const localVideo = document.getElementById('localVideo');
+            localVideo.srcObject = localStream;
+        }
+        startVideoStream();
+    </script>
+</body>
+</html>

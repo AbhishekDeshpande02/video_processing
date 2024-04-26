@@ -1,0 +1,27 @@
+<!-- video_edit.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Video</title>
+</head>
+<body>
+    <h1>Edit Video</h1>
+    <form method="post">
+        {% csrf_token %}
+        <label for="color">Select Color:</label>
+        <select name="color" id="color">
+            <option value="red">Red</option>
+            <option value="blue">Blue</option>
+            <option value="green">Green</option>
+            <!-- Add more color options as needed -->
+        </select>
+        <br>
+        <label for="fps">Select FPS:</label>
+        <input type="number" name="fps" id="fps" value="{{ video_settings.fps }}" min="1" max="60">
+        <br>
+        <button type="submit">Save</button>
+    </form>
+</body>
+</html>
