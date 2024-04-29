@@ -37,59 +37,53 @@ def video_edit(request):
         color = request.POST.get('color', 'default_color')
         fps = int(request.POST.get('fps', 30))  # Read FPS value from form
 
-        # Retrieve the logged-in user's username
-        uname = user.username
+        # Construct video path based on username
+        if user.username == 'user1':
+            video_path = "C:/Users/Abhishek/Documents/video_processing/assessment/videoprocessor/user1_video.mp4"
+        elif user.username == 'user2':
+            video_path = "C:/Users/Abhishek/Documents/video_processing/assessment/videoprocessor/user2_video.mp4"
+        else:
+            # Default video path if user is neither user1 nor user2
+            video_path = "C:/Users/Abhishek/Documents/video_processing/assessment/videoprocessor/user3_video.mp4"
 
-        # Define video paths for each user
-        user_video_paths = {
-            'user1': 'C:/Users/Abhishek/Desktop/assessment/videoprocessor/user1_video.mp4',
-            'user2': 'C:/Users/Abhishek/Desktop/assessment/videoprocessor/user2_video.mp4',
-        }
+        cap = cv2.VideoCapture(video_path)
 
-        # Check if the user has a specific video path assigned
-        video_path = user_video_paths.get(uname)
+        # Edit video color
+        def apply_color_effect(frame):
+            if color == 'red':
+                return cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            elif color == 'blue':
+                return cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+            elif color == 'green':
+                return cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)  # Corrected to use BGR2GRAY for green
+            else:
+                return frame
 
-        print(f"Username: {uname}")  # Debug print
-        print(f"Video path: {video_path}")  # Debug print
+        # Edit video FPS
+        frame_rate = cap.get(cv2.CAP_PROP_FPS)  # Get original frame rate
+        scale_factor = frame_rate / fps  # Calculate scale factor based on desired FPS
 
-        if video_path is not None:
-            cap = cv2.VideoCapture(video_path)
-
-            # Edit video color
-            def apply_color_effect(frame):
-                if color == 'red':
-                    return cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-                elif color == 'blue':
-                    return cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-                elif color == 'green':
-                    return cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)  # Corrected to use BGR2GRAY for green
-                else:
-                    return frame
-
-            # Edit video FPS
-            frame_rate = cap.get(cv2.CAP_PROP_FPS)  # Get original frame rate
-            scale_factor = frame_rate / fps  # Calculate scale factor based on desired FPS
-
-            # Process and save the edited video
-            fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-            out = cv2.VideoWriter('edited_video.mp4', fourcc, fps, (int(cap.get(3)), int(cap.get(4))))
-            while cap.isOpened():
-                ret, frame = cap.read()
-                if ret:
-                    frame = apply_color_effect(frame)
+        # Process and save the edited video
+        fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+        out = cv2.VideoWriter('edited_video.mp4', fourcc, fps, (int(cap.get(3)), int(cap.get(4))))
+        while cap.isOpened():
+            ret, frame = cap.read()
+            if ret:
+                frame = apply_color_effect(frame)
+                out.write(frame)
+                # Adjust frame rate if needed
+                for _ in range(int(scale_factor) - 1):
                     out.write(frame)
-                    # Adjust frame rate if needed
-                    for _ in range(int(scale_factor) - 1):
-                        out.write(frame)
-                else:
-                    break
-            cap.release()
-            out.release()
+            else:
+                break
+        cap.release()
+        out.release()
 
         # Redirect to video streaming page
         return redirect('video_stream')
 
     return render(request, 'video_edit.html', {'video_settings': video_settings})
+
 
 
 
