@@ -39,12 +39,12 @@ def video_edit(request):
 
         # Construct video path based on username
         if user.username == 'user1':
-            video_path = "C:/Users/Abhishek/Documents/video_processing/assessment/videoprocessor/user1_video.mp4"
+            video_path = 'user1_video.mp4'
         elif user.username == 'user2':
-            video_path = "C:/Users/Abhishek/Documents/video_processing/assessment/videoprocessor/user2_video.mp4"
+            video_path = 'user2_video.mp4'
         else:
             # Default video path if user is neither user1 nor user2
-            video_path = "C:/Users/Abhishek/Documents/video_processing/assessment/videoprocessor/user3_video.mp4"
+            video_path = 'user3_video.mp4'
 
         cap = cv2.VideoCapture(video_path)
 
