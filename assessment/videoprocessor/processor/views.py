@@ -55,13 +55,13 @@ def video_edit(request):
             elif color == 'blue':
                 return cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
             elif color == 'green':
-                return cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)  # Corrected to use BGR2GRAY for green
+                return cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY) 
             else:
                 return frame
 
         # Edit video FPS
         frame_rate = cap.get(cv2.CAP_PROP_FPS)  # Get original frame rate
-        scale_factor = frame_rate / fps  # Calculate scale factor based on desired FPS
+        scale_factor = frame_rate / fps
 
         # Process and save the edited video
         fourcc = cv2.VideoWriter_fourcc(*'mp4v')
@@ -71,7 +71,7 @@ def video_edit(request):
             if ret:
                 frame = apply_color_effect(frame)
                 out.write(frame)
-                # Adjust frame rate if needed
+           
                 for _ in range(int(scale_factor) - 1):
                     out.write(frame)
             else:
